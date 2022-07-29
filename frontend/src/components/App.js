@@ -19,7 +19,7 @@ const App = () => {
           <Route exact path="/confirmed">
             <Confirmation />
           </Route>
-          <Route path="">404: Oops!</Route>
+          <Route path=""><Confirmation/></Route>
         </Switch>
         <Footer />
       </Main>

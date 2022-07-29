@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import slingairLogo from "../assets/logo_text.png";
 
 const Header = () => (
+  <>
   <Wrapper>
     <Logo>
       <h1>Sling Airlines</h1>
@@ -15,6 +16,7 @@ const Header = () => (
       </>
     </Nav>
   </Wrapper>
+      </>
 );
 
 const Wrapper = styled.header`
@@ -24,6 +26,7 @@ const Wrapper = styled.header`
   height: 110px;
   padding: var(--padding-page) 18px;
 `;
+
 const Logo = styled.div`
   background-image: url(${slingairLogo});
   background-repeat: no-repeat;

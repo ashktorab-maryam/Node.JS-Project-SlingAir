@@ -1,12 +1,29 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-const Plane = ({}) => {
+const Plane = ({flight,fnc}) => {
+  const [status,setStatus] = useState("loading")
   const [seating, setSeating] = useState([]);
+  // const [reservation, setReservation] = useState([]);
+  const [fname, setFname] = useState("")    
+
 
   useEffect(() => {
-    // TODO: get seating data for selected flight
+    //TODO: get seating data for selected flight
+    fetch (`/api/get-flight/SA231`)
+    .then (res => res.json())
+    .then (data => {
+        console.log(data)
+        setSeating(data.data)
+        setStatus("idle")
+    })
+
   }, []);
+
+  const handleChange = e => {
+    setFname(e.target.value)
+} 
+
 
   return (
     <Wrapper>
@@ -16,7 +33,7 @@ const Plane = ({}) => {
             <label>
               {seat.isAvailable ? (
                 <>
-                  <Seat type="radio" name="seat" onChange={() => {}} />
+                  <Seat type="radio" name="seat" onChange={handleChange} value={seat.id}/>
                   <Available>{seat.id}</Available>
                 </>
               ) : (
@@ -43,6 +60,7 @@ const Placeholder = styled.div`
   font-family: var(--font-heading);
   font-size: 32px;
   opacity: 0.5;
+
 `;
 
 const Wrapper = styled.ol`
@@ -58,6 +76,7 @@ const Wrapper = styled.ol`
   height: 500px;
   width: 300px;
   position: relative;
+  margin-left:300px;
 `;
 const SeatWrapper = styled.li`
   display: flex;
