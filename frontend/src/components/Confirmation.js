@@ -1,27 +1,26 @@
 import { useContext, useEffect } from "react";
 import styled from "styled-components";
 import tombstone from "../assets/tombstone.png";
-import { UserContext } from "./SeatSelect/UserContext";
+import { Context } from "./Context";
 
 const Confirmation = () => {
-  const {
-    fname,
-    setFname,
-    currentUser} = useContext(UserContext)
+const {reservation} = useContext(Context)
 
-useEffect(() => {
-  setFname(currentUser)
-}, [])
+
+
+
+if (!reservation) return <p>Loading</p>
+
   return <Wrapper>
     <Box>
       <Div>
         <ConfirmStyle>Your flight is confirmed!</ConfirmStyle>
       </Div>
-<PStyle>Reservation # {fname.id}:</PStyle>
-<PStyle>Flight #: {fname.flight}</PStyle>
-<PStyle>seat #: {fname.seat}</PStyle>
-<PStyle>Name: {fname.givenName} {fname.surname} </PStyle>
-<PStyle>Email: {fname.email}</PStyle>
+<PStyle>Reservation # {reservation._id}:</PStyle>
+<PStyle>Flight #: {reservation.flight}</PStyle>
+<PStyle>seat #: {reservation.seat}</PStyle>
+<PStyle>Name: {reservation.givenName} {reservation.surname} </PStyle>
+<PStyle>Email: {reservation.email}</PStyle>
 {/* <PStyle>Reservation # </PStyle>
 <PStyle>Flight #: </PStyle>
 <PStyle>seat #: </PStyle>

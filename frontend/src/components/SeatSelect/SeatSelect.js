@@ -39,7 +39,7 @@ const {seat, reservation, setReservation} = useContext(Context);
     .then((data) => {
         console.log(data.data);
         setReservation(data.data);
-        sessionStorage.setItem("reservation", JSON.stringify(data.data._id));
+        localStorage.setItem("reservation", JSON.stringify(data.data._id));
         history.push("/confirmed");
     })
     .catch((err) => console.log(err))

@@ -97,27 +97,39 @@ catch (err) {
 };
 
 // // updates an existing reservation
-const updateReservation = async (req, res) => {
-    const { _id, flight, seat, givenName, surname, email } = req.body;
+// const updateReservation = async (req, res) => {
+//     const { _id, flight, seat, givenName, surname, email } = req.body;
+//     const client = new MongoClient(MONGO_URI, options);
+//     await client.connect();
+//     const db = client.db("SlingAirP");
+//     const query={_id};
+//     const newValues = { $set: { flight, seat, givenName, surname, email } };
+
+//  let isMissing = false
+//  if(!flight || !givenName || !email)
+//  {
+//     isMissing =true
+//     res.status(404).json({status:404, message:"seat not available",data: req.body});
+//  }
+//  else{
+//     const updateReservation = await db.collection("reservations").updateOne(query, newValues);
+//     updateReservation.acknowledged && res.status(200).json({ status: 200,message: "success" ,updatedTo: req.body  });
+//  }
+// client.close()
+
+// }
+const updateReservation = async(req, res) => {
     const client = new MongoClient(MONGO_URI, options);
     await client.connect();
-    const db = client.db("SlingAirP");
-    const query={_id};
-    const newValues = { $set: { flight, seat, givenName, surname, email } };
+    const db = client.db("SlingAirP")
+    const _id = req.params.reservationId
+    const data = await db.collection("reservation").updateOne({_id:ObjectId(_id)},{$set:{...req.body}})
+    data?
+    res.status(200).json({status:200,reservations:data}):
+    res.status(404).json({status:404,message:"Update SingleReservation Error"})
+};
 
- let isMissing = false
- if(!flight || !givenName || !email)
- {
-    isMissing =true
-    res.status(404).json({status:404, message:"seat not available",data: req.body});
- }
- else{
-    const updateReservation = await db.collection("reservations").updateOne(query, newValues);
-    updateReservation.acknowledged && res.status(200).json({ status: 200,message: "success" ,updatedTo: req.body  });
- }
-client.close()
 
-}
 //         const findReservation = await db.collection("reservations").findOne(question);
 //         const query = { _id: findReservation._id };
         
@@ -148,34 +160,49 @@ client.close()
 // };
 
 // // deletes a specified reservation
-const deleteReservation = async(req, res) => {
- const client = new MongoClient(MONGO_URI, options);
-        await client.connect();
-        const db = client.db("SlingAirP");
-        const {reservation}= req.params
-        const result = await db.collection("reservation").findOne({_id:reservation})
+// const deleteReservation = async(req, res) => {
+//  const client = new MongoClient(MONGO_URI, options);
+//         await client.connect();
+//         const db = client.db("SlingAirP");
+//         const {reservation}= req.params
+//         const result = await db.collection("reservation").findOne({_id:reservation})
 
 
-        const { flight, seat }= result
-        const query = {_id:flight, "seats.id": seat}
-        const newValues = { $set: { "seats.$.isAvailable":true } };
+//         const { flight, seat }= result
+//         const query = {_id:flight, "seats.id": seat}
+//         const newValues = { $set: { "seats.$.isAvailable":true } };
 
 
-        const del =  await db.collection("reservation").deleteOne({_id:reservation})
+//         const del =  await db.collection("reservation").deleteOne({_id:reservation})
 
-        if(del.deletedCount>0){
-            const newSeat= await db.collection("flight").updateOne({query,newValues})
-            res.status(201).json({ status: 201,
-                  message: "success",
-                del,
-            newSeat });
- }
- else{
-    res.status(404).json({status:404, message:"seat not available",data: req.body});
- }
-client.close()
+//         if(del.deletedCount>0){
+//             const newSeat= await db.collection("flight").updateOne({query,newValues})
+//             res.status(201).json({ status: 201,
+//                   message: "success",
+//                 del,
+//             newSeat });
+//  }
+//  else{
+//     res.status(404).json({status:404, message:"seat not available",data: req.body});
+//  }
+// client.close()
         
-    }
+//     }
+const deleteReservation = async(req, res) => {
+    const client = new MongoClient(MONGO_URI, options);
+    await client.connect();
+    const db = client.db("SlingAirP")
+    const _id = req.params.reservation
+    const foundReservation= await db.collection("reservation").findOne({_id:ObjectId(_id)})
+    const data = await db.collection("reservation").findOneAndDelete({_id:ObjectId(_id)});
+    await db.collection("flights")
+    .updateOne({_id: foundReservation.flight , "seats.id": foundReservation.seat }, 
+            { $set: { "seats.$.isAvailable": true }})
+    data?
+    res.status(200).json({status:200,reservations:data,message:"reservation deleted"}):
+    res.status(404).json({status:404,message:"deleteReservation Error"})
+
+};
 
 
 // //     const _id = req.params.reservation

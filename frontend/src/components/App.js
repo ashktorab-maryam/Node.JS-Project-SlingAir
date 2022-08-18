@@ -19,6 +19,9 @@ const App = () => {
           <Route exact path="/confirmed">
             <Confirmation />
           </Route>
+          <Route exact path="/reservation">
+            <Confirmation />
+          </Route>
         </Switch>
         <Footer />
       </Main>
