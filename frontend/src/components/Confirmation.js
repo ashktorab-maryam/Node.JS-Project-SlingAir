@@ -7,9 +7,7 @@ const Confirmation = () => {
   const {
     fname,
     setFname,
-    currentUser,
-    setCurrentUser,
-    handleChange} = useContext(UserContext)
+    currentUser} = useContext(UserContext)
 
 useEffect(() => {
   setFname(currentUser)
@@ -24,6 +22,11 @@ useEffect(() => {
 <PStyle>seat #: {fname.seat}</PStyle>
 <PStyle>Name: {fname.givenName} {fname.surname} </PStyle>
 <PStyle>Email: {fname.email}</PStyle>
+{/* <PStyle>Reservation # </PStyle>
+<PStyle>Flight #: </PStyle>
+<PStyle>seat #: </PStyle>
+<PStyle>Name:  </PStyle>
+<PStyle>Email:</PStyle> */}
       </Box>
       <Img src={tombstone}/>
       </Wrapper>;

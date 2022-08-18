@@ -26,30 +26,29 @@ export const UserProvider = ({ children }) => {
 
 
 
-    const  SignInUser = (ev) => {
-        ev.preventDefault()
-        setFname(formData)
-        fetch("/api/add-reservation", {
+    // const  NewReservation = (ev) => {
+    //     ev.preventDefault()
+    //     setFname(formData)
+    //     fetch("/api/add-reservation", {
             
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({...fname})})
-            .then(res => res.json())
-            .then(data => {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({...fname})})
+    //         .then(res => res.json())
+    //         .then(data => {
 
-                console.log(data)
-                if(data.status===201){   
-                    setCurrentUser(data.data)
-                    localStorage.setItem('user', JSON.stringify(data.data));
-                    history.push("/confirmed")
-                }
-            })
-        } 
+    //             console.log(data)
+    //             if(data.status===201){   
+    //                 setCurrentUser(data.data)
+    //                 localStorage.setItem('user', JSON.stringify(data.data));
+    //                 history.push("/confirmed")
+    //             }
+    //         })
+    //     } 
 
 
     return  (
         <UserContext.Provider value={{
-            SignInUser,
             fname,
             setFname,
             currentUser,

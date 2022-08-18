@@ -22,9 +22,9 @@ const Plane = ({flightId}) => {
 
   }, [flightId]);
 
-  const seatSelector  = (e) => {
-    setSeat(e.target.name)
-} 
+//   const seatSelector  = (e) => {
+//     setSeat(e.target.name)
+// } 
 
 
   return (
@@ -35,7 +35,7 @@ const Plane = ({flightId}) => {
             <label>
               {seat.isAvailable ? (
                 <>
-                  <Seat type="radio" name={seat.id} onChange={seatSelector }/>
+                  <Seat type="radio" name={seat.id} onChange={() => setSeat(seat.id)}/>
                   <Available>{seat.id}</Available>
                 </>
               ) : (
@@ -95,7 +95,7 @@ const Seat = styled.input`
   width: 30px;
   margin: 0;
 
-  &:checked {
+  &:checked + {
     span {
       background: var(--color-alabama-crimson);
       color: #fff;

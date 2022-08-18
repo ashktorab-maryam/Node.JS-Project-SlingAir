@@ -37,9 +37,9 @@ const {seat, reservation, setReservation} = useContext(Context);
     })
     .then((res) => res.json())
     .then((data) => {
-        // console.log(data.data);
+        console.log(data.data);
         setReservation(data.data);
-        sessionStorage.setItem("reservation", JSON.stringify(data.data));
+        sessionStorage.setItem("reservation", JSON.stringify(data.data._id));
         history.push("/confirmed");
     })
     .catch((err) => console.log(err))
@@ -56,7 +56,7 @@ const {seat, reservation, setReservation} = useContext(Context);
   <Div>
       <form>
       <BStyle> Flight Number </BStyle>   
-      <select onchange = {flightHandler} > 
+      <select onChange = {flightHandler} > 
       <option> Choose a Flight</option>  
       {
           flightArray.map((flight) => {
@@ -71,7 +71,7 @@ const {seat, reservation, setReservation} = useContext(Context);
   </Div>
       <h2>Select your seat and Provide your information!</h2>
   <Plane flightId = {flightId}/>
-  <Form onSubmit={handleSubmit}/>
+  <Form handleSubmit={handleSubmit} setGivenName={setGivenName} setSurname={setSurname} setEmail={setEmail}/>
     </>
   );
 };

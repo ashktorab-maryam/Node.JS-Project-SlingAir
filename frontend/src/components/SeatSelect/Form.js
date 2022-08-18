@@ -5,59 +5,54 @@ import styled from "styled-components"
 
 
 
-const formData={
-    givenName:"",
-    surname:"",
-    email:""
-}
-const Form = () => {
+
+const Form = ({handleSubmit, setGivenName, setSurname, setEmail}) => {
     const history = useHistory();
 
-    const [fname, setFname] = useState({...formData})  
-    const[disabled, setDisabled]=useState(true)  
 
-    const [currentUser, setCurrentUser]= useState(JSON.parse(sessionStorage.getItem('user')))
-    const handleChange = (name,value) => {
-        // setFname(e.target.value)
-        setFname({...fname,[name]:value })
-    } 
+    // const [currentUser, setCurrentUser]= useState(JSON.parse(sessionStorage.getItem('user')))
+    // const handleChange = (name,value) => {
+    //     // setFname(e.target.value)
+    //     setFname({...fname,[name]:value })
+    // } 
 
 
 
-    const  PostReservation = (ev) => {
-        ev.preventDefault()
-        setFname(formData)
-        fetch("/api/add-reservation", {
+    // const  PostReservation = (ev) => {
+    //     ev.preventDefault()
+    //     setFname(formData)
+    //     fetch("/api/add-reservation", {
             
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({...fname})})
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-                setCurrentUser(data.data)
-                sessionStorage.setItem('user', JSON.stringify(data));
-                history.push("/confirmed")
-            })
-        } 
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({...fname})})
+    //         .then(res => res.json())
+    //         .then(data => {
+    //             console.log(data)
+    //             if(data.status===201){
+    //                 setCurrentUser(data.data)
+    //                 sessionStorage.setItem('user', JSON.stringify(data));
+    //                 history.push("/confirmed")
+    //             }else{
+    //             window.alert("User already reserved!")
+    //         }
+    //         })
+    //     } 
 
         //online import useHistory history.push (/)
         return (<div>
             <Div>
-            <form onSubmit={PostReservation}>
+            <form onSubmit={handleSubmit}>
             
                 <Input type="text" 
                 placeholder="First name" 
-                value={fname.givenName} 
-                onChange={(e)=> handleChange("givenName" , e.target.value)} /><br></br>
+                onChange={(e)=> setGivenName(e.target.value)} /><br></br>
                 <Input type="text" 
                 placeholder="Last name" 
-                value={fname.surname} 
-                onChange={(e)=> handleChange("surname" , e.target.value)} /><br></br>
+                onChange={(e)=> setSurname(e.target.value)} /><br></br>
                 <Input type="text" 
                 placeholder="Email" 
-                value={fname.email} 
-                onChange={(e)=> handleChange("email" , e.target.value)} /><br></br>
+                onChange={(e)=> setEmail(e.target.value)} /><br></br>
             <Button >Confirm</Button>
             </form>
             </Div>

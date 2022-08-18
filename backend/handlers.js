@@ -80,12 +80,17 @@ const addReservation = async(req, res) => {
     const db = client.db("SlingAirP");
     console.log("connected!");
     const result = await db.collection("reservation").insertOne(req.body);
-    console.log(req.body);
-    res.status(201).json({ status: 201, data: req.body,message: "reservation success" });
+    console.log(result)
+    await db
+    .collection("flights")
+    .updateOne({_id: req.body.flight ,"seats.id": req.body.seat },{ $set:{"seats.$.isAvailable":false }})
+    result ? 
+    res.status(201).json({ status: 201, data: req.body,message: "reservation success" }):
+    res.status(400).json({ status: 400, data: req.body, message: "failed reservation" });
     }
 catch (err) {
     console.log(err.stack);
-    res.status(400).json({ status: 400, data: req.body, message: "failed reservation" });
+    res.status(500).json({ status: 500,  message: "server error" });
 }
     client.close();
     console.log("disconnected!");
