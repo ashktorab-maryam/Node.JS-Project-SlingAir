@@ -58,8 +58,6 @@ const Form = () => {
                 placeholder="Email" 
                 value={fname.email} 
                 onChange={(e)=> handleChange("email" , e.target.value)} /><br></br>
-                {/* <Input type="text" placeholder="Last name" value={fname} onChange={handleChange} /><br></br>
-                <Input type="text" placeholder="Email" value={fname} onChange={handleChange} /><br></br> */}
             <Button >Confirm</Button>
             </form>
             </Div>

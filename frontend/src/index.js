@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./components/App";
-// import { ContextProvider } from "./components/SeatSelect/contex";
+import { ContextProvider } from "./components/Context";
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <ContextProvider> */}
+    <ContextProvider>
     <App />
-    {/* </ContextProvider> */}
+    </ContextProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

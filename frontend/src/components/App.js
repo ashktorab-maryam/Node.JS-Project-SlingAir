@@ -19,7 +19,6 @@ const App = () => {
           <Route exact path="/confirmed">
             <Confirmation />
           </Route>
-          <Route path=""><Confirmation/></Route>
         </Switch>
         <Footer />
       </Main>

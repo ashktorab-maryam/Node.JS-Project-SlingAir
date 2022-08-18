@@ -1,18 +1,29 @@
+import { useContext, useEffect } from "react";
 import styled from "styled-components";
-
 import tombstone from "../assets/tombstone.png";
+import { UserContext } from "./SeatSelect/UserContext";
 
 const Confirmation = () => {
+  const {
+    fname,
+    setFname,
+    currentUser,
+    setCurrentUser,
+    handleChange} = useContext(UserContext)
+
+useEffect(() => {
+  setFname(currentUser)
+}, [])
   return <Wrapper>
     <Box>
       <Div>
         <ConfirmStyle>Your flight is confirmed!</ConfirmStyle>
       </Div>
-<PStyle>Reservation #:</PStyle>
-<PStyle>Flight #:</PStyle>
-<PStyle>seat #:</PStyle>
-<PStyle>Name:</PStyle>
-<PStyle>Email:</PStyle>
+<PStyle>Reservation # {fname.id}:</PStyle>
+<PStyle>Flight #: {fname.flight}</PStyle>
+<PStyle>seat #: {fname.seat}</PStyle>
+<PStyle>Name: {fname.givenName} {fname.surname} </PStyle>
+<PStyle>Email: {fname.email}</PStyle>
       </Box>
       <Img src={tombstone}/>
       </Wrapper>;

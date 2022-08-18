@@ -8,6 +8,10 @@ const options = {
 };
 // use this package to generate unique ids: https://www.npmjs.com/package/uuid
 const { v4: uuidv4 } = require("uuid");
+const sendResponse= (res, status, data, message = "nothing")=>{
+    return res.status(status).json({status, data,message})
+
+}
 
 // use this data. Changes will persist until the server (backend) restarts.
 const { flights, reservations } = require("./data");
@@ -87,60 +91,133 @@ catch (err) {
     console.log("disconnected!");
 };
 
-// updates an existing reservation
-const updateReservation = async(req, res) => {
+// // updates an existing reservation
+const updateReservation = async (req, res) => {
+    const { _id, flight, seat, givenName, surname, email } = req.body;
     const client = new MongoClient(MONGO_URI, options);
-    try {
-    await client.connect();
-    const db = client.db("SlingAirP")
-    const _id = req.params._id 
-
-    const xyz =  await db.collection("reservation").updateOne({_id:ObjectId(_id)},
-    {$set:{
-        givenName:givenName,
-        surname:surname,
-        email:email
-    }})
-
-    const query = { _id };
-    //console.log(query)
-    // contains the values that we which to
-   const newValues = { $set: {...req.body} };
-    console.log("connected!");
-
-    const result = await db.collection("reservation").updateOne(query, newValues);
-
-    console.log(result);
-    res.status(200).json({ status: 200, data:xyz});
-    }
-
-catch (err) {
-    console.log(err.stack);
-    res.status(404).json({ status: 404, message: "Update reservation failed" });
-}
-    client.close();
-    console.log("disconnected!");
-};
-
-// deletes a specified reservation
-const deleteReservation = async(req, res) => {
-    const client = new MongoClient(MONGO_URI, options);
-    try {
     await client.connect();
     const db = client.db("SlingAirP");
-    const _id = req.params.reservation
-    console.log("connected!");
-    const result = await db.collection("reservation").deleteOne({ _id });
-    console.log(req.body);
-    res.status(201).json({ status: 204, data: req.body });
-    }
-catch (err) {
-    console.log(err.stack);
-    res.status(500).json({ status: 500, data: req.body, message: "Delete reservation failed" });
+    const query={_id};
+    const newValues = { $set: { flight, seat, givenName, surname, email } };
+
+ let isMissing = false
+ if(!flight || !givenName || !email)
+ {
+    isMissing =true
+    res.status(404).json({status:404, message:"seat not available",data: req.body});
+ }
+ else{
+    const updateReservation = await db.collection("reservations").updateOne(query, newValues);
+    updateReservation.acknowledged && res.status(200).json({ status: 200,message: "success" ,updatedTo: req.body  });
+ }
+client.close()
+
 }
-    client.close();
-    console.log("disconnected!");
-};
+//         const findReservation = await db.collection("reservations").findOne(question);
+//         const query = { _id: findReservation._id };
+        
+//         const seatsData = await db.collection("flights").findOne({_id: findReservation._id});
+//         console.log(query)
+//         if (seatBody) {
+
+//             const seatsArray = seatsData.seats;
+//             const findSeat = seatsArray.find(seat=>seat.id === seatBody);
+// // lookn for the seat in the array
+//             if (!findSeat.isAvailable) {
+//                 res.status(404).json({status:404, message:"seat not available"});
+//                 return;
+//             }
+//             findSeat.isAvailable = false;
+//             const findOldSeat = seatsArray.find(seat=>seat.id === findReservation.seat);
+//             findOldSeat.isAvailable = true;
+//             const updateSeat = await db.collection("flights").updateOne(query, {$set: {...seatsData}});
+//         }
+// // update the reservation with the new seat if it exists
+//         const updateReservation = await db.collection("reservations").updateOne(question, bodyDetails);
+//         res.status(201).json({ status: 201, data: {updateReservation}, message: "success" });
+//     } catch (err) {
+//         console.log(err.stack);
+//         res.status(500).json({ status: 500, data: {updateReservation}, message: err.message });
+//     }
+//     client.close();
+// };
+
+// // deletes a specified reservation
+const deleteReservation = async(req, res) => {
+ const client = new MongoClient(MONGO_URI, options);
+        await client.connect();
+        const db = client.db("SlingAirP");
+        const {reservation}= req.params
+        const result = await db.collection("reservation").findOne({_id:reservation})
+
+
+        const { flight, seat }= result
+        const query = {_id:flight, "seats.id": seat}
+        const newValues = { $set: { "seats.$.isAvailable":true } };
+
+
+        const del =  await db.collection("reservation").deleteOne({_id:reservation})
+
+        if(del.deletedCount>0){
+            const newSeat= await db.collection("flight").updateOne({query,newValues})
+            res.status(201).json({ status: 201,
+                  message: "success",
+                del,
+            newSeat });
+ }
+ else{
+    res.status(404).json({status:404, message:"seat not available",data: req.body});
+ }
+client.close()
+        
+    }
+
+
+// //     const _id = req.params.reservation
+// //     console.log("connected!");
+// //     const result = await db.collection("reservation").deleteOne({ _id });
+// //     console.log(req.body);
+// //     res.status(201).json({ status: 204, data: req.body });
+// //     }
+// // catch (err) {
+// //     console.log(err.stack);
+// //     res.status(500).json({ status: 500, data: req.body, message: "Delete reservation failed" });
+// // }
+// //     client.close();
+// //     console.log("disconnected!");
+
+
+
+// //**********************************Dipti */
+
+// const deleteReservation = async (req, res) => {
+//     const client = new MongoClient(MONGO_URI, options);
+//     const _id = req.params.reservation;
+
+//     try {
+//         await client.connect();
+//         const db = client.db("SlingAirP");
+// // create a new flight with the specified seats
+
+//         const detailsReservation = await db.collection("reservations").findOne({ _id });
+//         console.log(detailsReservation.flight);
+//         const flightId = detailsReservation.flight;
+//         const seatBody = detailsReservation.seat;
+//         const query = { _id: flightId, "seats.id": seatBody };
+//         const newValues = { $set: { "seats.$.isAvailable": true } };
+// // update the flight with the new seat if it exists
+//         const updateSeat = await db.collection("flights").updateOne(query, newValues);
+
+//         const result = await db.collection("reservations").deleteOne({ _id });
+//         res.status(204).json({ status: 204, data: {result, updateSeat}, message: "Data passes through" });
+//     } catch (err) {
+//         console.log(err.stack);
+//         res.status(500).json({ status: 500, message: err.message });
+//     }
+//     client.close();
+// };
+
+
 
 module.exports = {
     getFlights,

@@ -1,16 +1,18 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
+import { Context } from "../Context";
 
-const Plane = ({flight,fnc}) => {
+const Plane = ({flightId}) => {
+  const {seat, setSeat} = useContext(Context);
   const [status,setStatus] = useState("loading")
   const [seating, setSeating] = useState([]);
-  // const [reservation, setReservation] = useState([]);
-  const [fname, setFname] = useState("")    
+  // const [reservation, setReservation] = useState([]); 
 
 
   useEffect(() => {
     //TODO: get seating data for selected flight
-    fetch (`/api/get-flight/SA231`)
+    //********************if I put ${flightId}=SA231 it works
+    fetch (`/api/get-flight/${flightId}`)
     .then (res => res.json())
     .then (data => {
         console.log(data)
@@ -18,10 +20,10 @@ const Plane = ({flight,fnc}) => {
         setStatus("idle")
     })
 
-  }, []);
+  }, [flightId]);
 
-  const handleChange = e => {
-    setFname(e.target.value)
+  const seatSelector  = (e) => {
+    setSeat(e.target.name)
 } 
 
 
@@ -33,7 +35,7 @@ const Plane = ({flight,fnc}) => {
             <label>
               {seat.isAvailable ? (
                 <>
-                  <Seat type="radio" name="seat" onChange={handleChange} value={seat.id}/>
+                  <Seat type="radio" name={seat.id} onChange={seatSelector }/>
                   <Available>{seat.id}</Available>
                 </>
               ) : (
