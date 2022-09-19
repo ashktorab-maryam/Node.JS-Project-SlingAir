@@ -60,6 +60,7 @@ const Form = ({handleSubmit, setGivenName, setSurname, setEmail}) => {
     }
 
 const Div = styled.div`
+margin-top:-25%;
 padding:50px;
 margin-left:50%;
 display:block;
@@ -68,7 +69,7 @@ background-color:rgba(204, 85, 0, 0.3);
 font-weight:bold;
 position:absolute;
 text-align:center;
-bottom:0;
+/* bottom:0; */
 left:0;
 padding-bottom:10px;
 border:1px solid var(--color-alabama-crimson);
